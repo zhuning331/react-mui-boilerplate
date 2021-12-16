@@ -1,25 +1,22 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import { ThemeProvider } from '@mui/material/styles';
 import './App.css';
 
-function App() {
+import theme from './styles/theme';
+import Header from './components/Header';
+import Content from './components/Content';
+import tabsConfig from './config/tabsConfig';
+import { ITab } from './types/Tab';
+
+const App: React.FC = () => {
+  const [tabs, setTabs] = useState<ITab[]>(tabsConfig);
+  const {REACT_APP_NAME, REACT_APP_VERSION} = process.env;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <Header projectName={REACT_APP_NAME} version={REACT_APP_VERSION} tabs={tabs} setTabs={setTabs} />
+      <Content />
+    </ThemeProvider>
   );
 }
 
