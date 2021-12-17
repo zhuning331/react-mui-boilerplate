@@ -8,7 +8,7 @@ import TemplateUpdate from '../pages/template/TemplateUpdate';
 const Content: React.FC = () => {
 
   return (
-    <Box sx={{ flexGrow: 1, padding: 1 }}>
+    <Box sx={{ flexGrow: 1, padding: 2 }}>
       <Routes>
         <Route path="/AAA" element={<TemplateList />} />
         <Route path="/CCC" element={<TemplateUpdate />} />
