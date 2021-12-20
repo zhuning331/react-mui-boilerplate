@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useState, useEffect, useContext, ChangeEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -11,11 +11,13 @@ import { AxiosResponse } from 'axios';
 import IMockUser, { initialMockUser } from '../../types/MockUser';
 import IUpdateModalProps from '../../types/UpdateModalProps';
 import MockUserService from '../../services/MockUserService';
+import { AlertContext, IAlertContext } from '../../types/AlertState';
 
 const MockUserUpdate: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) => {
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
   const { id } = useParams();
+  const { setAlertState } = useContext<IAlertContext>(AlertContext); 
 
   const [mockUser, setMockUser] = useState<IMockUser>(initialMockUser);
   useEffect(() => {
@@ -38,6 +40,11 @@ const MockUserUpdate: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) =
       MockUserService.updateMockUser(mockUser)
         .then((res: AxiosResponse) => {
           console.log(res);
+          setAlertState({
+            open: true,
+            severity: 'success',
+            message: 'Edit Mock User Successfully!'
+          });
           props.onRefreshList();
         })
         .catch((e: Error) => {
@@ -47,6 +54,11 @@ const MockUserUpdate: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) =
       MockUserService.addMockUser(mockUser)
         .then((res: AxiosResponse) => {
           console.log(res);
+          setAlertState({
+            open: true,
+            severity: 'success',
+            message: 'Add Mock User Successfully!'
+          });
           props.onRefreshList();
         })
         .catch((e: Error) => {

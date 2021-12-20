@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -10,11 +10,13 @@ import { AxiosResponse } from 'axios';
 
 import IUpdateModalProps from '../../types/UpdateModalProps';
 import MockUserService from '../../services/MockUserService';
+import { AlertContext, IAlertContext } from '../../types/AlertState';
 
 const MockUserDelete: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) => {
   const [open, setOpen] = React.useState(true);
   const navigate = useNavigate();
   const { id } = useParams();
+  const { setAlertState } = useContext<IAlertContext>(AlertContext); 
 
   const handleClose = () => {
     setOpen(false);
@@ -25,6 +27,11 @@ const MockUserDelete: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) =
     id && MockUserService.deleteMockUser(+id)
       .then((res: AxiosResponse) => {
         console.log(res);
+        setAlertState({
+          open: true,
+          severity: 'success',
+          message: 'Delete Mock User Successfully!'
+        });
         props.onRefreshList();
       })
       .catch((e: Error) => {
