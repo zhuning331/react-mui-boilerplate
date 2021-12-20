@@ -9,8 +9,8 @@ const tabsConfig: ITab[] = [
     name: 'Products',
     subTabs: [
       {
-        name: 'AAA',
-        url: '/AAA',
+        name: 'Mock User',
+        url: '/mock-user',
         icon: <DeleteIcon />,
         selected: true
       },

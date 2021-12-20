@@ -119,6 +119,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
                     startIcon={subTab.icon}
                     selected={subTab.selected}
                     onClick={() => handleButtonClick(subTab)}
+                    sx={{textTransform: 'none'}}
                   >{subTab.name}
                   </MenuButton>
                 </Link>
