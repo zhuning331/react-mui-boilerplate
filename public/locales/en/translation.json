@@ -1,0 +1,45 @@
+{
+    "global": {
+        "title": "React Mui Boilerplate",
+        "en": "English",
+        "zh": "繁體中文",
+        "action": {
+            "title": "Actions",
+            "search": "Search",
+            "confirm": "Confirm",
+            "cancel": "Cancel"
+        },
+        "auth": {
+            "logIn": "Log in",
+            "logOut": "Log out"
+        },
+        "message": {
+            "noRows": "No data found"
+        }
+    },
+    "entity": {
+        "mockUser": {
+            "title": "Mock User",
+            "column": {
+                "firstName": "First Name",
+                "lastName": "Last Name",
+                "age": "Age",
+                "fullName": "Full Name"
+            },
+            "action": {
+                "add": "Add Mock User",
+                "edit": "Edit Mock User",
+                "delete": "Delete Mock User"
+            },
+            "message": {
+                "delete": "Are you sure to delete mock user id: {{id}}?",
+                "addSuccess": "Add Mock User Successfully!",
+                "addFail": "Add Mock User Failed!",
+                "editSuccess": "Edit Mock User Successfully!",
+                "editFail": "Edit Mock User Failed!",
+                "deleteSuccess": "Delete Mock User Successfully!",
+                "deleteFail": "Delete Mock User Failed!"
+            }
+        }
+    }
+}

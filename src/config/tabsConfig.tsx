@@ -12,12 +12,14 @@ const tabsConfig: ITab[] = [
       {
         name: 'Mock User',
         url: '/mock-user',
+        i18n: 'mockUser',
         icon: <GroupsIcon />,
         selected: true
       },
       {
         name: 'BBB',
         url: '/BBB',
+        i18n: 'mockUser',
         icon: <TheatersIcon />,
         selected: false
       }
@@ -30,30 +32,14 @@ const tabsConfig: ITab[] = [
       {
         name: 'CCC',
         url: '/CCC',
+        i18n: 'mockUser',
         icon: <ViewInArIcon />,
         selected: false
       },
       {
         name: 'DDD',
         url: '/DDD',
-        icon: <TheatersIcon />,
-        selected: false
-      }
-    ]
-  },
-  {
-    id: 2,
-    name: 'Blog',
-    subTabs: [
-      {
-        name: 'EEE',
-        url: '/EEE',
-        icon: <GroupsIcon />,
-        selected: false
-      },
-      {
-        name: 'FFF',
-        url: '/FFF',
+        i18n: 'mockUser',
         icon: <TheatersIcon />,
         selected: false
       }

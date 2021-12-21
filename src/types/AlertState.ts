@@ -7,16 +7,18 @@ export default interface IAlertState {
   message: string
 }
 
+export const initialAlertState: IAlertState = {
+  open: false,
+  severity: 'success',
+  message: 'Hello, world!'
+}
+
 export interface IAlertContext {
   alertState: IAlertState,
   setAlertState: React.Dispatch<React.SetStateAction<IAlertState>>
 }
 
 export const AlertContext = createContext<IAlertContext>({
-  alertState: {
-    open: false,
-    severity: 'success',
-    message: 'Hello, world!'
-  },
+  alertState: initialAlertState,
   setAlertState: () => {}
 });

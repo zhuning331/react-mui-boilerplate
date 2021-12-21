@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useMemo, ChangeEvent } from 'react';
 import { useLocation, useNavigate, Routes, Route } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { DataGrid, GridColumns, GridActionsCellItem, GridRowId } from '@mui/x-data-grid';
+import { DataGrid, GridColumns, GridActionsCellItem, GridRowId, GridOverlay } from '@mui/x-data-grid';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
@@ -27,6 +28,7 @@ const MockUserList: React.FC = () => {
   });
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     getPagedMockUsers(rowsState.page, rowsState.pageSize, rowsState.searchTerm);
@@ -45,18 +47,30 @@ const MockUserList: React.FC = () => {
   }
 
   const columns: GridColumns = [
-    { field: 'id', headerName: 'ID', flex: 1 },
-    { field: 'firstName', headerName: 'First name', flex: 1 },
-    { field: 'lastName', headerName: 'Last name', flex: 1 },
+    { 
+      field: 'id', 
+      headerName: 'ID', 
+      flex: 1 
+    },
+    { 
+      field: 'firstName', 
+      headerName: t('entity.mockUser.column.firstName'), 
+      flex: 1 
+    },
+    { 
+      field: 'lastName', 
+      headerName: t('entity.mockUser.column.lastName'), 
+      flex: 1 
+    },
     {
       field: 'age',
-      headerName: 'Age',
+      headerName: t('entity.mockUser.column.age'),
       type: 'number',
       flex: 1,
     },
     {
       field: 'fullName',
-      headerName: 'Full name',
+      headerName: t('entity.mockUser.column.fullName'),
       description: 'This column has a value getter and is not sortable.',
       sortable: false,
       flex: 2,
@@ -68,7 +82,7 @@ const MockUserList: React.FC = () => {
     {
       field: 'actions',
       type: 'actions',
-      headerName: 'Actions',
+      headerName: t('global.action.title'),
       flex: 1,
       cellClassName: 'actions',
       getActions: ({id}) => {
@@ -130,7 +144,7 @@ const MockUserList: React.FC = () => {
           sx={{textTransform: 'none'}}
           onClick={handleAddClick}
         >
-          Add Mock User
+          {t('entity.mockUser.action.add')}
         </Button>
       </Stack>
       <DataGrid
@@ -146,6 +160,11 @@ const MockUserList: React.FC = () => {
           '& .MuiDataGrid-footerContainer': {
             justifyContent: 'center'
           }
+        }}
+        components={{
+          NoRowsOverlay: () => (
+            <GridOverlay>{t('global.message.noRows')}</GridOverlay>
+          ),
         }}
       />
       <Routes>

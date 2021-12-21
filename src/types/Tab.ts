@@ -15,6 +15,7 @@ export interface ITab {
 export interface ISubTab {
   name: string,
   url: string,
+  i18n: string,
   icon: React.ReactNode,
   selected: boolean
 }

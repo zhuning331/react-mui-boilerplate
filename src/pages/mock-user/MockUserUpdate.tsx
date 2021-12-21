@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, ChangeEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -18,8 +19,9 @@ const MockUserUpdate: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) =
   const navigate = useNavigate();
   const { id } = useParams();
   const { setAlertState } = useContext<IAlertContext>(AlertContext); 
-
   const [mockUser, setMockUser] = useState<IMockUser>(initialMockUser);
+  const { t } = useTranslation();
+
   useEffect(() => {
     id && MockUserService.getMockUser(+id)
       .then((res: AxiosResponse) => {
@@ -43,12 +45,17 @@ const MockUserUpdate: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) =
           setAlertState({
             open: true,
             severity: 'success',
-            message: 'Edit Mock User Successfully!'
+            message: t('entity.mockUser.message.editSuccess')
           });
           props.onRefreshList();
         })
         .catch((e: Error) => {
           console.error(e);
+          setAlertState({
+            open: true,
+            severity: 'error',
+            message: t('entity.mockUser.message.editFail')
+          });
         });
     } else {
       MockUserService.addMockUser(mockUser)
@@ -57,12 +64,17 @@ const MockUserUpdate: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) =
           setAlertState({
             open: true,
             severity: 'success',
-            message: 'Add Mock User Successfully!'
+            message: t('entity.mockUser.message.addSuccess')
           });
           props.onRefreshList();
         })
         .catch((e: Error) => {
           console.error(e);
+          setAlertState({
+            open: true,
+            severity: 'error',
+            message: t('entity.mockUser.message.addFail')
+          });
         });
     }
     handleClose();
@@ -76,15 +88,14 @@ const MockUserUpdate: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) =
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>
-        {id ? 'Edit ' : 'Add '}
-        Mock User
+        {t('entity.mockUser.action.' + (id ? 'edit' : 'add'))}
       </DialogTitle>
       <DialogContent>
         <TextField
           required
           autoFocus
           name="firstName"
-          label="First Name"
+          label={t('entity.mockUser.column.firstName')}
           value={mockUser.firstName}
           onChange={handleInputChange}
           fullWidth
@@ -94,7 +105,7 @@ const MockUserUpdate: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) =
         <TextField
           required
           name="lastName"
-          label="Last Name"
+          label={t('entity.mockUser.column.lastName')}
           value={mockUser.lastName}
           onChange={handleInputChange}
           fullWidth
@@ -103,7 +114,7 @@ const MockUserUpdate: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) =
         />
         <TextField
           name="age"
-          label="Age"
+          label={t('entity.mockUser.column.age')}
           value={mockUser.age}
           onChange={handleInputChange}
           type="number"
@@ -113,8 +124,8 @@ const MockUserUpdate: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) =
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} sx={{textTransform: 'none'}}>Cancel</Button>
-        <Button onClick={handleConfirm} sx={{textTransform: 'none'}}>Confirm</Button>
+        <Button onClick={handleClose} sx={{textTransform: 'none'}}>{t('global.action.cancel')}</Button>
+        <Button onClick={handleConfirm} sx={{textTransform: 'none'}}>{t('global.action.confirm')}</Button>
       </DialogActions>
     </Dialog>
   );

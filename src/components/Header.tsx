@@ -1,33 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import AccountCircle from '@mui/icons-material/AccountCircle';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import TranslateIcon from '@mui/icons-material/Translate';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Tabs from '@mui/material/Tabs';
 
 import { ITab, ISubTab } from '../types/Tab';
 import IHeaderProps from '../types/HeaderProps';
+import IHeaderState, { initialHeaderState } from '../types/HeaderState';
 import MenuTab from '../styles/MenuTab';
 import MenuButton from '../styles/MenuButton';
 import TabPanel, { a11yProps } from './TabPanel';
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const { projectName, version, tabs, setTabs } = props;
+  const [headerState, setHeaderState] = useState<IHeaderState>(initialHeaderState);
+  const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const {projectName, version, tabs, setTabs} = props;
   const handleButtonClick = (st: ISubTab) => {
     const newTabs = tabs.map((tab: ITab) => {
       tab.subTabs.map((subTab: ISubTab) => {
@@ -38,14 +35,21 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
     });
     setTabs(newTabs);
   };
-
-  const [value, setValue] = React.useState(0);
-  const navigate = useNavigate();
+  
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    setHeaderState((prev: IHeaderState) => ({ ...prev, tabValue: newValue }));
     const selectSubTab: ISubTab = tabs.find((tab: ITab) => tab.id === newValue)!.subTabs[0];
     handleButtonClick(selectSubTab);
     navigate(selectSubTab.url);
+  };
+
+  const logout = () => {
+    //TODO
+  };
+
+  const handleLanguageChange = (language: string) => {
+    i18n.changeLanguage(language);
+    setHeaderState((prev: IHeaderState) => ({ ...prev, languageAnchorEl: null }));
   };
 
   return (
@@ -60,7 +64,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex' } }}>
           <Tabs 
-            value={value}
+            value={headerState.tabValue}
             onChange={handleChange}
             aria-label="basic tabs example"
             textColor="inherit"
@@ -78,17 +82,19 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           <div>
             <IconButton
               size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
+              aria-label="change current language"
+              aria-controls="i18n-appbar"
               aria-haspopup="true"
-              onClick={handleMenu}
+              onClick={(event: React.MouseEvent<HTMLElement>) => {
+                setHeaderState((prev: IHeaderState) => ({ ...prev, languageAnchorEl: event.currentTarget }));
+              }}
               color="inherit"
             >
-              <AccountCircle />
+              <TranslateIcon />
             </IconButton>
             <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
+              id="i18n-appbar"
+              anchorEl={headerState.languageAnchorEl}
               anchorOrigin={{
                 vertical: 'top',
                 horizontal: 'right',
@@ -98,11 +104,46 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
                 vertical: 'top',
                 horizontal: 'right',
               }}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
+              open={Boolean(headerState.languageAnchorEl)}
+              onClose={() => {
+                setHeaderState((prev: IHeaderState) => ({ ...prev, languageAnchorEl: null }));
+              }}
             >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
+              <MenuItem onClick={() => handleLanguageChange('zh')}>{t('global.zh')}</MenuItem>
+              <MenuItem onClick={() => handleLanguageChange('en')}>{t('global.en')}</MenuItem>
+            </Menu>
+          </div>
+          <div>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={(event: React.MouseEvent<HTMLElement>) => {
+                setHeaderState((prev: IHeaderState) => ({ ...prev, accountAnchorEl: event.currentTarget }));
+              }}
+              color="inherit"
+            >
+              <AccountCircleIcon />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={headerState.accountAnchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(headerState.accountAnchorEl)}
+              onClose={() => {
+                setHeaderState((prev: IHeaderState) => ({ ...prev, accountAnchorEl: null }));
+              }}
+            >
+              <MenuItem onClick={logout}>{t('global.auth.logOut')}</MenuItem>
             </Menu>
           </div>
         </Toolbar>
@@ -110,7 +151,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       <AppBar position="static" color="secondary">
         <Toolbar style={{ minHeight: 44 }}>
           {tabs.map((tab: ITab) => (
-            <TabPanel key={tab.id} value={value} index={tab.id}>
+            <TabPanel key={tab.id} value={headerState.tabValue} index={tab.id}>
               {tab.subTabs.map((subTab: ISubTab) => (
                 <Link key={subTab.name} to={subTab.url} style={{textDecoration: 'none'}}>
                   <MenuButton 
@@ -120,7 +161,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
                     selected={subTab.selected}
                     onClick={() => handleButtonClick(subTab)}
                     sx={{textTransform: 'none'}}
-                  >{subTab.name}
+                  >{t(`entity.${subTab.i18n}.title`)}
                   </MenuButton>
                 </Link>
               ))}

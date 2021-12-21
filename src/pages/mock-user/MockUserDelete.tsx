@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -16,7 +17,8 @@ const MockUserDelete: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) =
   const [open, setOpen] = React.useState(true);
   const navigate = useNavigate();
   const { id } = useParams();
-  const { setAlertState } = useContext<IAlertContext>(AlertContext); 
+  const { setAlertState } = useContext<IAlertContext>(AlertContext);
+  const { t } = useTranslation();
 
   const handleClose = () => {
     setOpen(false);
@@ -30,12 +32,17 @@ const MockUserDelete: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) =
         setAlertState({
           open: true,
           severity: 'success',
-          message: 'Delete Mock User Successfully!'
+          message: t('entity.mockUser.message.deleteSuccess')
         });
         props.onRefreshList();
       })
       .catch((e: Error) => {
         console.error(e);
+        setAlertState({
+          open: true,
+          severity: 'error',
+          message: t('entity.mockUser.message.deleteFail')
+        });
       });
     handleClose();
   };
@@ -47,15 +54,15 @@ const MockUserDelete: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) =
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-    <DialogTitle id="alert-dialog-title">Delete Mock User</DialogTitle>
+    <DialogTitle id="alert-dialog-title">{t('entity.mockUser.action.delete')}</DialogTitle>
     <DialogContent>
       <DialogContentText id="alert-dialog-description">
-        Are you sure to delete mock user id: {id}?
+        {t('entity.mockUser.message.delete', {id})}
       </DialogContentText>
     </DialogContent>
     <DialogActions>
-      <Button onClick={handleClose} sx={{textTransform: 'none'}}>Cancel</Button>
-      <Button onClick={handleConform} sx={{textTransform: 'none'}} autoFocus>Confirm</Button>
+      <Button onClick={handleClose} sx={{textTransform: 'none'}}>{t('global.action.cancel')}</Button>
+      <Button onClick={handleConform} sx={{textTransform: 'none'}} autoFocus>{t('global.action.confirm')}</Button>
     </DialogActions>
     </Dialog>
   );

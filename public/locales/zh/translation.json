@@ -1,0 +1,45 @@
+{
+    "global": {
+        "title": "React Mui 樣板",
+        "en": "English",
+        "zh": "繁體中文",
+        "action": {
+            "title": "操作",
+            "search": "搜尋",
+            "confirm": "確認",
+            "cancel": "取消"
+        },
+        "auth": {
+            "logIn": "登入",
+            "logOut": "登出"
+        },
+        "message": {
+            "noRows": "查無資料"
+        }
+    },
+    "entity": {
+        "mockUser": {
+            "title": "虛擬使用者",
+            "column": {
+                "firstName": "名字",
+                "lastName": "姓氏",
+                "age": "年齡",
+                "fullName": "全名"
+            },
+            "action": {
+                "add": "新增虛擬使用者",
+                "edit": "編輯虛擬使用者",
+                "delete": "刪除虛擬使用者"
+            },
+            "message": {
+                "delete": "你確定要刪除 ID 為: {{id}}的虛擬使用者嗎?",
+                "addSuccess": "新增虛擬使用者成功!",
+                "addFail": "新增虛擬使用者失敗!",
+                "editSuccess": "編輯虛擬使用者成功!",
+                "editFail": "編輯虛擬使用者失敗!",
+                "deleteSuccess": "刪除虛擬使用者成功!",
+                "deleteFail": "刪除虛擬使用者失敗!"
+            }
+        }
+    }
+}
