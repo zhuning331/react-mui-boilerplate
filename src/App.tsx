@@ -11,7 +11,7 @@ import { ITab } from './types/Tab';
 import IAlertState, { AlertContext } from './types/AlertState';
 
 const App: React.FC = () => {
-  const {REACT_APP_NAME, REACT_APP_VERSION} = process.env;
+  const { REACT_APP_NAME, REACT_APP_VERSION } = process.env;
   const [tabs, setTabs] = useState<ITab[]>(tabsConfig);
   const [alertState, setAlertState] = useState<IAlertState>({
     open: false,

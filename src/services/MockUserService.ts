@@ -3,7 +3,7 @@ import IMockUser from '../types/MockUser';
 
 const mockUsersUrl = '/mockUsers';
 
-const getMockUsers = () => http.get(mockUsersUrl);
+const getAllMockUsers = () => http.get(mockUsersUrl);
 
 const getPagedMockUsers = (page: number, pageSize: number, firstName?: string) => {
     return http.get(`${mockUsersUrl}?_page=${page}&_limit=${pageSize}` + (firstName ? `&firstName=${firstName}` : ''));
@@ -20,7 +20,7 @@ const deleteMockUser = (id: number) => http.delete(`${mockUsersUrl}/${id}`);
 const searchMockUser = (term: string) => http.get(`${mockUsersUrl}?q=${term}`);
 
 const MockUserService = {
-  getMockUsers,
+  getMockUsers: getAllMockUsers,
   getPagedMockUsers,
   getMockUser,
   addMockUser,
