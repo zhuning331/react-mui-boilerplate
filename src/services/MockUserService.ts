@@ -5,6 +5,10 @@ const mockUsersUrl = '/mockUsers';
 
 const getMockUsers = () => http.get(mockUsersUrl);
 
+const getPagedMockUsers = (page: number, pageSize: number, firstName?: string) => {
+    return http.get(`${mockUsersUrl}?_page=${page}&_limit=${pageSize}` + (firstName ? `&firstName=${firstName}` : ''));
+};
+
 const getMockUser = (id: number) => http.get(`${mockUsersUrl}/${id}`);
 
 const addMockUser = (mockUser: IMockUser) => http.post(mockUsersUrl, mockUser);
@@ -17,6 +21,7 @@ const searchMockUser = (term: string) => http.get(`${mockUsersUrl}?q=${term}`);
 
 const MockUserService = {
   getMockUsers,
+  getPagedMockUsers,
   getMockUser,
   addMockUser,
   updateMockUser,

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useMemo, ChangeEvent } from 'react';
 import { useLocation, useNavigate, Routes, Route } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
@@ -12,27 +13,34 @@ import { debounce } from 'lodash';
 import MockUserUpdate from './MockUserUpdate';
 import MockUserDelete from './MockUserDelete';
 import MockUserService from '../../services/MockUserService';
-import IMockUser from '../../types/MockUser';
+import IRowsState from '../../types/RowsState';
 import SearchBar from '../../components/SearchBar';
 
 const MockUserList: React.FC = () => {
-  const [mockUsers, setMockUsers] = useState<IMockUser[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [rowsState, setRowsState] = useState<IRowsState>({
+    page: 0,
+    pageSize: 20,
+    rowCount: 0,
+    rows: [],
+    loading: false,
+    searchTerm: ''
+  });
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => getMockUsers(), []);
+  useEffect(() => {
+    getPagedMockUsers(rowsState.page, rowsState.pageSize, rowsState.searchTerm);
+  }, [rowsState.page, rowsState.pageSize]) 
 
-  const getMockUsers = () => {
-    setLoading(true);
-    MockUserService.getMockUsers()
+  const getPagedMockUsers = (page: number, pageSize: number, firstName?: string) => {
+    setRowsState((prev: IRowsState) => ({ ...prev, loading: true }));
+    MockUserService.getPagedMockUsers(page + 1, pageSize, firstName)
       .then((res: AxiosResponse) => {
-        setMockUsers(res.data);
-        setLoading(false);
+        setRowsState((prev: IRowsState) => ({ ...prev, rowCount: +res.headers['x-total-count'], rows: res.data, loading: false }));
       })
       .catch((e: Error) => {
         console.error(e);
-        setLoading(false);
+        setRowsState((prev: IRowsState) => ({ ...prev, loading: false }));
       });
   }
 
@@ -96,16 +104,8 @@ const MockUserList: React.FC = () => {
   }
 
   const searchTermChangeHandler = (evt: ChangeEvent<HTMLInputElement>) => {
-    setLoading(true);
-    MockUserService.searchMockUser(evt.target.value)
-      .then((res: AxiosResponse) => {
-        setMockUsers(res.data);
-        setLoading(false);
-      })
-      .catch((e: Error) => {
-        console.error(e);
-        setLoading(false);
-      });
+    setRowsState((prev: IRowsState) => ({ ...prev, searchTerm: evt.target.value }));
+    getPagedMockUsers(rowsState.page, rowsState.pageSize, evt.target.value);
   };
 
   const debouncedChangeHandler = useMemo(
@@ -134,14 +134,14 @@ const MockUserList: React.FC = () => {
         </Button>
       </Stack>
       <DataGrid
-        rows={mockUsers}
+        {...rowsState}
+        onPageChange={(page: number) => setRowsState((prev: IRowsState) => ({ ...prev, page }))}
+        paginationMode="server"
         columns={columns}
-        pageSize={20}
         rowsPerPageOptions={[20]}
         density='compact'
         autoHeight={true}
         hideFooterSelectedRowCount={true}
-        loading={loading}
         sx={{
           '& .MuiDataGrid-footerContainer': {
             justifyContent: 'center'
@@ -149,9 +149,9 @@ const MockUserList: React.FC = () => {
         }}
       />
       <Routes>
-        <Route path="add" element={<MockUserUpdate onRefreshList={getMockUsers} />} />
-        <Route path=":id" element={<MockUserUpdate onRefreshList={getMockUsers} />} />
-        <Route path=":id/delete" element={<MockUserDelete onRefreshList={getMockUsers} />} />
+        <Route path="add" element={<MockUserUpdate onRefreshList={() => getPagedMockUsers(rowsState.page, rowsState.pageSize, rowsState.searchTerm)} />} />
+        <Route path=":id" element={<MockUserUpdate onRefreshList={() => getPagedMockUsers(rowsState.page, rowsState.pageSize, rowsState.searchTerm)} />} />
+        <Route path=":id/delete" element={<MockUserDelete onRefreshList={() => getPagedMockUsers(rowsState.page, rowsState.pageSize, rowsState.searchTerm)} />} />
       </Routes>
     </div>
   )
