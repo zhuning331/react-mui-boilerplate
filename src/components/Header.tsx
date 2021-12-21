@@ -96,7 +96,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
               id="i18n-appbar"
               anchorEl={headerState.languageAnchorEl}
               anchorOrigin={{
-                vertical: 'top',
+                vertical: 'bottom',
                 horizontal: 'right',
               }}
               keepMounted
@@ -130,7 +130,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
               id="menu-appbar"
               anchorEl={headerState.accountAnchorEl}
               anchorOrigin={{
-                vertical: 'top',
+                vertical: 'bottom',
                 horizontal: 'right',
               }}
               keepMounted
