@@ -10,11 +10,12 @@
             "cancel": "Cancel"
         },
         "auth": {
-            "logIn": "Log in",
-            "logOut": "Log out"
+            "logIn": "Login",
+            "logOut": "Logout"
         },
         "message": {
-            "noRows": "No data found"
+            "noRows": "No data found",
+            "loginFail": "Login failed! Please check your account and password"
         }
     },
     "entity": {

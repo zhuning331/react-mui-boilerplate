@@ -1,4 +1,11 @@
 {
+  "users": [
+    {
+      "email": "admin@admin",
+      "password": "$2a$10$dcfHdeuKA1s76yBk./b7I.leLogAxbYmd7MsteAiO3wO4uiHc4V.q",
+      "id": 1
+    }
+  ],
   "mockUsers": [
     {
       "id": 1,

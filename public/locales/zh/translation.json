@@ -14,7 +14,8 @@
             "logOut": "登出"
         },
         "message": {
-            "noRows": "查無資料"
+            "noRows": "查無資料",
+            "loginFail": "登入失敗! 請檢查你的帳號及密碼是否輸入錯誤"
         }
     },
     "entity": {

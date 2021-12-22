@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import AppBar from '@mui/material/AppBar';
@@ -15,15 +15,18 @@ import Tabs from '@mui/material/Tabs';
 import { ITab, ISubTab } from '../types/Tab';
 import IHeaderProps from '../types/HeaderProps';
 import IHeaderState, { initialHeaderState } from '../types/HeaderState';
+import IAuthState, { AuthContext, IAuthContext } from '../types/AuthState';
 import MenuTab from '../styles/MenuTab';
 import MenuButton from '../styles/MenuButton';
 import TabPanel, { a11yProps } from './TabPanel';
+import AuthService from '../services/AuthService';
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { projectName, version, tabs, setTabs } = props;
   const [headerState, setHeaderState] = useState<IHeaderState>(initialHeaderState);
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+  const { setAuthState } = useContext<IAuthContext>(AuthContext); 
 
   const handleButtonClick = (st: ISubTab) => {
     const newTabs = tabs.map((tab: ITab) => {
@@ -44,7 +47,8 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   };
 
   const logout = () => {
-    //TODO
+    AuthService.logout();
+    setAuthState((prev: IAuthState) => ({ ...prev, isAuthenticated: false }));
   };
 
   const handleLanguageChange = (language: string) => {

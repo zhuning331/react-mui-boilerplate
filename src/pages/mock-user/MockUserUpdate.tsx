@@ -67,6 +67,12 @@ const MockUserUpdate: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) =
             message: t('entity.mockUser.message.addSuccess')
           });
           props.onRefreshList();
+        }, (res: AxiosResponse) => {
+          setAlertState({
+            open: true,
+            severity: 'error',
+            message: t('entity.mockUser.message.addFail')
+          });
         })
         .catch((e: Error) => {
           console.error(e);
