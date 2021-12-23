@@ -13,6 +13,7 @@ import { ITab } from './types/Tab';
 import IAlertState, { initialAlertState, AlertContext } from './types/AlertState';
 import IAuthState, { initialAuthState, AuthContext } from './types/AuthState';
 import AuthService from './services/AuthService';
+import setupAxiosInterceptors from './utils/axios-interceptor';
 
 const App: React.FC = () => {
   const { REACT_APP_VERSION } = process.env;
@@ -22,6 +23,7 @@ const App: React.FC = () => {
   const [authState, setAuthState] = useState<IAuthState>(initialAuthState);
 
   useEffect(() => {
+    setupAxiosInterceptors(() => AuthService.logout());
     const user = AuthService.getCurrentUser();
     setAuthState((prev: IAuthState) => ({ ...prev, isAuthenticated: !!user }));
   }, []);

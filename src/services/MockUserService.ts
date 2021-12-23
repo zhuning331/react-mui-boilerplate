@@ -1,23 +1,23 @@
-import http from '../utils/http-common';
+import axios from 'axios';
 import IMockUser from '../types/MockUser';
 
 const mockUsersUrl = '/mockUsers';
 
-const getAllMockUsers = () => http.get(mockUsersUrl);
+const getAllMockUsers = () => axios.get(mockUsersUrl);
 
 const getPagedMockUsers = (page: number, pageSize: number, firstName?: string) => {
-    return http.get(`${mockUsersUrl}?_page=${page}&_limit=${pageSize}` + (firstName ? `&firstName=${firstName}` : ''));
+    return axios.get(`${mockUsersUrl}?_page=${page}&_limit=${pageSize}` + (firstName ? `&firstName=${firstName}` : ''));
 };
 
-const getMockUser = (id: number) => http.get(`${mockUsersUrl}/${id}`);
+const getMockUser = (id: number) => axios.get(`${mockUsersUrl}/${id}`);
 
-const addMockUser = (mockUser: IMockUser) => http.post(mockUsersUrl, mockUser);
+const addMockUser = (mockUser: IMockUser) => axios.post(mockUsersUrl, mockUser);
 
-const updateMockUser = (mockUser: IMockUser) => http.put(`${mockUsersUrl}/${mockUser.id}`, mockUser);
+const updateMockUser = (mockUser: IMockUser) => axios.put(`${mockUsersUrl}/${mockUser.id}`, mockUser);
 
-const deleteMockUser = (id: number) => http.delete(`${mockUsersUrl}/${id}`);
+const deleteMockUser = (id: number) => axios.delete(`${mockUsersUrl}/${id}`);
 
-const searchMockUser = (term: string) => http.get(`${mockUsersUrl}?q=${term}`);
+const searchMockUser = (term: string) => axios.get(`${mockUsersUrl}?q=${term}`);
 
 const MockUserService = {
   getMockUsers: getAllMockUsers,

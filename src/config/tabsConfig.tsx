@@ -7,7 +7,7 @@ import { ITab } from '../types/Tab';
 const tabsConfig: ITab[] = [
   {
     id: 0,
-    name: 'Products',
+    name: 'Tab 1',
     subTabs: [
       {
         name: 'Mock User',
@@ -27,7 +27,7 @@ const tabsConfig: ITab[] = [
   },
   {
     id: 1,
-    name: 'Pricing',
+    name: 'Tab 2',
     subTabs: [
       {
         name: 'CCC',

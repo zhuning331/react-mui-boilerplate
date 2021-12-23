@@ -67,21 +67,26 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
             v{version}
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex' } }}>
-          <Tabs 
-            value={headerState.tabValue}
-            onChange={handleChange}
-            aria-label="basic tabs example"
-            textColor="inherit"
-            TabIndicatorProps={{
-              style: {
-                display: "none"
-              }
-            }}
-          >
-            {tabs.map((tab: ITab) => (
-              <MenuTab key={tab.id} label={tab.name} {...a11yProps(tab.id)} />
-            ))}
-          </Tabs>
+            <Tabs 
+              value={headerState.tabValue}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+              textColor="inherit"
+              TabIndicatorProps={{
+                style: {
+                  display: "none"
+                }
+              }}
+            >
+              {tabs.map((tab: ITab) => (
+                <MenuTab 
+                  key={tab.id} 
+                  label={tab.name} 
+                  sx={{textTransform: 'none'}} 
+                  {...a11yProps(tab.id)}
+                />
+              ))}
+            </Tabs>
           </Box>
           <div>
             <IconButton

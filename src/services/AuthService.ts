@@ -1,10 +1,9 @@
-import http from '../utils/http-common';
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 const loginUrl = '/login';
 
 const login = (username: FormDataEntryValue | null, password: FormDataEntryValue | null, rememberMe?: boolean) => {
-  return http.post(loginUrl, {
+  return axios.post(loginUrl, {
     email: username,
     password
   }).then((res: AxiosResponse) => {
