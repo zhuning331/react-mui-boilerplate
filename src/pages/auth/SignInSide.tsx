@@ -1,6 +1,6 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,40 +15,31 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { AxiosResponse } from 'axios';
 
-import IAuthState, { AuthContext, IAuthContext } from '../../types/AuthState';
+import ISignInState, { initialSignInState } from '../../types/SignInState';
+import { AuthContext, IAuthContext } from '../../types/AuthState';
 import { AlertContext, IAlertContext } from '../../types/AlertState';
 import AuthService from '../../services/AuthService';
 
-// TODO: Refine the dirty code
-
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-export default function SignInSide() {
-  const [rememberMe, setRememberMe] = useState(true);
-  const { setAuthState } = useContext<IAuthContext>(AuthContext); 
+const SignInSide: React.FC = () => {
+  const [signInState, setSignInState] = useState<ISignInState>(initialSignInState);
+  const { username, password, rememberMe } = signInState;
+  const { authState, setAuthState } = useContext<IAuthContext>(AuthContext); 
   const { setAlertState } = useContext<IAlertContext>(AlertContext);
   const { t } = useTranslation();
   const navigate = useNavigate();
   useEffect(() => navigate('/'), [navigate]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+  const handleInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    const { name } = evt.target;
+    const value = evt.target.type === 'checkbox' ? evt.target.checked : evt.target.value;
+    setSignInState({ ...signInState, [name]: value });
+  };
+
+  const handleLogin = () => {
     AuthService
-      .login(data.get('email'), data.get('password'), rememberMe)
+      .login(username, password, rememberMe)
       .then(() => {
-        setAuthState((prev: IAuthState) => ({ ...prev, isAuthenticated: true }));
+        setAuthState({ ...authState, isAuthenticated: true });
       }, (res: AxiosResponse) => {
         console.error(res);
         setAlertState({
@@ -63,94 +54,95 @@ export default function SignInSide() {
   };
 
   return (
-      <Grid container component="main" sx={{ height: '100vh' }}>
-        <CssBaseline />
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
-          sx={{
-            backgroundImage: 'url(/images/img_login_bg.jpg)',
-            backgroundRepeat: 'no-repeat',
-            backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Sign in
-            </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email"
-                name="email"
-                autoComplete="email"
-                autoFocus
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-              <FormControlLabel
-                name="rememberMe"
-                control={
-                  <Checkbox 
-                    name="rememberMe" 
-                    checked={rememberMe} 
-                    onChange={(evt: React.ChangeEvent<HTMLInputElement>) => setRememberMe(evt.target.checked)} 
-                    color="primary" 
-                  />}
-                label="Remember me"
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Sign In
-              </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
+    <Grid container component="main" sx={{ height: '100vh' }}>
+      <CssBaseline />
+      <Grid item xs={false} sm={4} md={7} sx={{
+        backgroundImage: 'url(/images/img_login_bg.jpg)',
+        backgroundRepeat: 'no-repeat',
+        backgroundColor: (t) =>
+          t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
+      />
+      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Box sx={{
+            my: 8,
+            mx: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+        }}>
+          <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            {t('global.auth.login')}
+          </Typography>
+          <Box component="form" noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="username"
+              label={t('global.auth.username')}
+              name="username"
+              autoComplete="username"
+              autoFocus
+              value={username}
+              onChange={handleInputChange}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label={t('global.auth.password')}
+              type="password"
+              id="password"
+              autoComplete="password"
+              value={password}
+              onChange={handleInputChange}
+            />
+            <FormControlLabel
+              name="rememberMe"
+              control={
+                <Checkbox 
+                  name="rememberMe"
+                  checked={rememberMe} 
+                  onChange={handleInputChange} 
+                  color="primary" 
+                />}
+              label={<Trans i18nKey={'global.auth.rememberMe'} />}
+            />
+            <Button
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={handleLogin}
+            >
+              {t('global.auth.login')}
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  {t('global.auth.forgotPassword')}
+                </Link>
               </Grid>
-              <Copyright sx={{ mt: 5 }} />
-            </Box>
+              <Grid item>
+                <Link href="#" variant="body2">
+                  {t('global.auth.signUpInfo')}
+                </Link>
+              </Grid>
+            </Grid>
+            <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 5 }}>
+              {'Copyright © Awesome Company ' + new Date().getFullYear() + '.'}
+            </Typography>
           </Box>
-        </Grid>
+        </Box>
       </Grid>
+    </Grid>
   );
 }
+
+export default SignInSide;

@@ -27,8 +27,7 @@ const MockUserDelete: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) =
 
   const handleConform = () => {
     id && MockUserService.deleteMockUser(+id)
-      .then((res: AxiosResponse) => {
-        console.log(res);
+      .then(() => {
         setAlertState({
           open: true,
           severity: 'success',

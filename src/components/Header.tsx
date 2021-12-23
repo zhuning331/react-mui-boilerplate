@@ -15,7 +15,7 @@ import Tabs from '@mui/material/Tabs';
 import { ITab, ISubTab } from '../types/Tab';
 import IHeaderProps from '../types/HeaderProps';
 import IHeaderState, { initialHeaderState } from '../types/HeaderState';
-import IAuthState, { AuthContext, IAuthContext } from '../types/AuthState';
+import { AuthContext, IAuthContext } from '../types/AuthState';
 import MenuTab from '../styles/MenuTab';
 import MenuButton from '../styles/MenuButton';
 import TabPanel, { a11yProps } from './TabPanel';
@@ -40,7 +40,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   };
   
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setHeaderState((prev: IHeaderState) => ({ ...prev, tabValue: newValue }));
+    setHeaderState({ ...headerState, tabValue: newValue });
     const selectSubTab: ISubTab = tabs.find((tab: ITab) => tab.id === newValue)!.subTabs[0];
     handleButtonClick(selectSubTab);
     navigate(selectSubTab.url);
@@ -48,12 +48,12 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
 
   const logout = () => {
     AuthService.logout();
-    setAuthState((prev: IAuthState) => ({ ...prev, isAuthenticated: false }));
+    setAuthState({ ...headerState, isAuthenticated: false });
   };
 
   const handleLanguageChange = (language: string) => {
     i18n.changeLanguage(language);
-    setHeaderState((prev: IHeaderState) => ({ ...prev, languageAnchorEl: null }));
+    setHeaderState({ ...headerState, languageAnchorEl: null });
   };
 
   return (
@@ -90,7 +90,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
               aria-controls="i18n-appbar"
               aria-haspopup="true"
               onClick={(event: React.MouseEvent<HTMLElement>) => {
-                setHeaderState((prev: IHeaderState) => ({ ...prev, languageAnchorEl: event.currentTarget }));
+                setHeaderState({ ...headerState, languageAnchorEl: event.currentTarget });
               }}
               color="inherit"
             >
@@ -110,7 +110,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
               }}
               open={Boolean(headerState.languageAnchorEl)}
               onClose={() => {
-                setHeaderState((prev: IHeaderState) => ({ ...prev, languageAnchorEl: null }));
+                setHeaderState({ ...headerState, languageAnchorEl: null });
               }}
             >
               <MenuItem onClick={() => handleLanguageChange('zh')}>{t('global.zh')}</MenuItem>
@@ -124,7 +124,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={(event: React.MouseEvent<HTMLElement>) => {
-                setHeaderState((prev: IHeaderState) => ({ ...prev, accountAnchorEl: event.currentTarget }));
+                setHeaderState({ ...headerState, accountAnchorEl: event.currentTarget });
               }}
               color="inherit"
             >
@@ -144,10 +144,10 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
               }}
               open={Boolean(headerState.accountAnchorEl)}
               onClose={() => {
-                setHeaderState((prev: IHeaderState) => ({ ...prev, accountAnchorEl: null }));
+                setHeaderState({ ...headerState, accountAnchorEl: null });
               }}
             >
-              <MenuItem onClick={logout}>{t('global.auth.logOut')}</MenuItem>
+              <MenuItem onClick={logout}>{t('global.auth.logout')}</MenuItem>
             </Menu>
           </div>
         </Toolbar>

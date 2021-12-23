@@ -35,14 +35,14 @@ const MockUserList: React.FC = () => {
   }, [rowsState.page, rowsState.pageSize]) 
 
   const getPagedMockUsers = (page: number, pageSize: number, firstName?: string) => {
-    setRowsState((prev: IRowsState) => ({ ...prev, loading: true }));
+    setRowsState({ ...rowsState, loading: true });
     MockUserService.getPagedMockUsers(page + 1, pageSize, firstName)
       .then((res: AxiosResponse) => {
-        setRowsState((prev: IRowsState) => ({ ...prev, rowCount: +res.headers['x-total-count'], rows: res.data, loading: false }));
+        setRowsState({ ...rowsState, rowCount: +res.headers['x-total-count'], rows: res.data, loading: false });
       })
       .catch((e: Error) => {
         console.error(e);
-        setRowsState((prev: IRowsState) => ({ ...prev, loading: false }));
+        setRowsState({ ...rowsState, loading: false });
       });
   }
 
@@ -118,7 +118,7 @@ const MockUserList: React.FC = () => {
   }
 
   const searchTermChangeHandler = (evt: ChangeEvent<HTMLInputElement>) => {
-    setRowsState((prev: IRowsState) => ({ ...prev, searchTerm: evt.target.value }));
+    setRowsState({ ...rowsState, searchTerm: evt.target.value });
     getPagedMockUsers(rowsState.page, rowsState.pageSize, evt.target.value);
   };
 
@@ -149,7 +149,7 @@ const MockUserList: React.FC = () => {
       </Stack>
       <DataGrid
         {...rowsState}
-        onPageChange={(page: number) => setRowsState((prev: IRowsState) => ({ ...prev, page }))}
+        onPageChange={(page: number) => setRowsState({ ...rowsState, page })}
         paginationMode="server"
         columns={columns}
         rowsPerPageOptions={[20]}

@@ -10,8 +10,13 @@
             "cancel": "取消"
         },
         "auth": {
-            "logIn": "登入",
-            "logOut": "登出"
+            "login": "登入",
+            "logout": "登出",
+            "username": "帳號",
+            "password": "密碼",
+            "rememberMe": "記住我",
+            "forgotPassword": "忘記密碼?",
+            "signUpInfo": "還沒有帳號? 點我註冊"
         },
         "message": {
             "noRows": "查無資料",

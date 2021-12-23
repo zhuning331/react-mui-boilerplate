@@ -40,14 +40,20 @@ const MockUserUpdate: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) =
   const handleConfirm = () => {
     if (id) {
       MockUserService.updateMockUser(mockUser)
-        .then((res: AxiosResponse) => {
-          console.log(res);
+        .then(() => {
           setAlertState({
             open: true,
             severity: 'success',
             message: t('entity.mockUser.message.editSuccess')
           });
           props.onRefreshList();
+        }, (res: AxiosResponse) => {
+          console.error(res);
+          setAlertState({
+            open: true,
+            severity: 'error',
+            message: t('entity.mockUser.message.editFail')
+          });
         })
         .catch((e: Error) => {
           console.error(e);
@@ -59,8 +65,7 @@ const MockUserUpdate: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) =
         });
     } else {
       MockUserService.addMockUser(mockUser)
-        .then((res: AxiosResponse) => {
-          console.log(res);
+        .then(() => {
           setAlertState({
             open: true,
             severity: 'success',
@@ -68,6 +73,7 @@ const MockUserUpdate: React.FC<IUpdateModalProps> = (props: IUpdateModalProps) =
           });
           props.onRefreshList();
         }, (res: AxiosResponse) => {
+          console.error(res);
           setAlertState({
             open: true,
             severity: 'error',

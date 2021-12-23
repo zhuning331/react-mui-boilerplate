@@ -10,8 +10,13 @@
             "cancel": "Cancel"
         },
         "auth": {
-            "logIn": "Login",
-            "logOut": "Logout"
+            "login": "Login",
+            "logout": "Logout",
+            "username": "Username",
+            "password": "Password",
+            "rememberMe": "Remember Me",
+            "forgotPassword": "Forgot password?",
+            "signUpInfo": "Don't have an account? Sign Up"
         },
         "message": {
             "noRows": "No data found",
