@@ -10,8 +10,9 @@ import Content from './components/Content';
 import Alert from './components/Alert';
 import tabsConfig from './config/tabsConfig';
 import { ITab } from './types/Tab';
-import IAlertState, { initialAlertState, AlertContext } from './types/AlertState';
-import IAuthState, { initialAuthState, AuthContext } from './types/AuthState';
+import IGlobalContext, { GlobalContext } from './types/GlobalContext';
+import IAlertState, { initialAlertState } from './types/AlertState';
+import IAuthState, { initialAuthState } from './types/AuthState';
 import AuthService from './services/AuthService';
 import setupAxiosInterceptors from './utils/axios-interceptor';
 
@@ -21,26 +22,27 @@ const App: React.FC = () => {
   const [tabs, setTabs] = useState<ITab[]>(tabsConfig);
   const [alertState, setAlertState] = useState<IAlertState>(initialAlertState);
   const [authState, setAuthState] = useState<IAuthState>(initialAuthState);
-
+  const globalContextValue: IGlobalContext = {
+    alert: {alertState, setAlertState},
+    auth: {authState, setAuthState}
+  };
+  
   useEffect(() => {
     setupAxiosInterceptors(() => AuthService.logout());
-    const user = AuthService.getCurrentUser();
-    setAuthState((prev: IAuthState) => ({ ...prev, isAuthenticated: !!user }));
+    setAuthState((prev: IAuthState) => ({ ...prev, isAuthenticated: !!AuthService.getCurrentUser() }));
   }, []);
 
   return (
     <ThemeProvider theme={theme}>
-      <AlertContext.Provider value={{alertState, setAlertState}}>
+      <GlobalContext.Provider value={globalContextValue}>
         <Alert />
-        <AuthContext.Provider value={{authState, setAuthState}}>
-          {authState.isAuthenticated ?
-          <>
-            <Header projectName={t('global.title')} version={REACT_APP_VERSION} tabs={tabs} setTabs={setTabs} />
-            <Content />
-          </> :
-          <SignInSide />}
-        </AuthContext.Provider>
-      </AlertContext.Provider>
+        {authState.isAuthenticated ?
+        <>
+          <Header projectName={t('global.title')} version={REACT_APP_VERSION} tabs={tabs} setTabs={setTabs} />
+          <Content />
+        </> :
+        <SignInSide />}
+      </GlobalContext.Provider>
     </ThemeProvider>
   );
 }

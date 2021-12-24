@@ -16,15 +16,16 @@ import Typography from '@mui/material/Typography';
 import { AxiosResponse } from 'axios';
 
 import ISignInState, { initialSignInState } from '../../types/SignInState';
-import { AuthContext, IAuthContext } from '../../types/AuthState';
-import { AlertContext, IAlertContext } from '../../types/AlertState';
+import IGlobalContext, { GlobalContext } from '../../types/GlobalContext';
 import AuthService from '../../services/AuthService';
 
 const SignInSide: React.FC = () => {
   const [signInState, setSignInState] = useState<ISignInState>(initialSignInState);
   const { username, password, rememberMe } = signInState;
-  const { authState, setAuthState } = useContext<IAuthContext>(AuthContext); 
-  const { setAlertState } = useContext<IAlertContext>(AlertContext);
+  const { auth, alert } = useContext<IGlobalContext>(GlobalContext);
+  const { authState, setAuthState } = auth;
+  const { setAlertState } = alert; 
+
   const { t } = useTranslation();
   const navigate = useNavigate();
   useEffect(() => navigate('/'), [navigate]);

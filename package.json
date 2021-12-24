@@ -41,7 +41,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "cd mock && json-server .\\db.json -w -p 3001 -d 500 -H 192.168.3.133 -m ..\\node_modules\\json-server-auth",
+    "server": "cd mock && json-server .\\db.json -w -p 3001 -d 500 -H localhost -m ..\\node_modules\\json-server-auth",
     "dev": "concurrently \"yarn server\" \"yarn start\""
   },
   "eslintConfig": {

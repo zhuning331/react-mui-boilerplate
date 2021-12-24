@@ -2,10 +2,11 @@ import React, { useContext } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
-import { AlertContext, IAlertContext } from '../types/AlertState';
+import IGlobalContext, { GlobalContext } from '../types/GlobalContext';
 
 const Alert: React.FC = () => {
-  const { alertState, setAlertState } = useContext<IAlertContext>(AlertContext); 
+  const { alert } = useContext<IGlobalContext>(GlobalContext); 
+  const { alertState, setAlertState } = alert;
 
   const handleClose = () => {
     setAlertState({ ...alertState, open: false });

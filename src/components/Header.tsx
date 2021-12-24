@@ -15,7 +15,7 @@ import Tabs from '@mui/material/Tabs';
 import { ITab, ISubTab } from '../types/Tab';
 import IHeaderProps from '../types/HeaderProps';
 import IHeaderState, { initialHeaderState } from '../types/HeaderState';
-import { AuthContext, IAuthContext } from '../types/AuthState';
+import IGlobalContext, { GlobalContext } from '../types/GlobalContext';
 import MenuTab from '../styles/MenuTab';
 import MenuButton from '../styles/MenuButton';
 import TabPanel, { a11yProps } from './TabPanel';
@@ -26,7 +26,8 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const [headerState, setHeaderState] = useState<IHeaderState>(initialHeaderState);
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const { setAuthState } = useContext<IAuthContext>(AuthContext); 
+  const { auth } = useContext<IGlobalContext>(GlobalContext);
+  const { authState, setAuthState } = auth;
 
   const handleButtonClick = (st: ISubTab) => {
     const newTabs = tabs.map((tab: ITab) => {
@@ -48,7 +49,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
 
   const logout = () => {
     AuthService.logout();
-    setAuthState({ ...headerState, isAuthenticated: false });
+    setAuthState({ ...authState, isAuthenticated: false });
   };
 
   const handleLanguageChange = (language: string) => {
